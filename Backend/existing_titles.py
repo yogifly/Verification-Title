@@ -1,0 +1,21 @@
+existing_titles = [
+    "The Hindu", "Indian Express", "Daily News", "Morning Times", "Samachar Bharati",
+    "The Pioneer", "The National Herald", "India Today", "Dainik Jagran", "Hindustan Times",
+    "Amar Ujala", "The Telegraph", "Deccan Herald", "The Tribune", "Financial Express",
+    "Economic Times", "Business Standard", "The Statesman", "The Independent", "The Observer",
+    "Jan Satta", "Navbharat Times", "The Free Press Journal", "Prabhat Khabar", "Rajasthan Patrika",
+    "Sakal", "Malayala Manorama", "Dina Thanthi", "Eenadu", "Andhra Jyothy",
+    "Maharashtra Times", "Sandesh", "Lokmat", "Gujarat Samachar", "Kannada Prabha",
+    "Udayavani", "Mathrubhumi", "Samaya", "Sambad", "The Assam Tribune",
+    "Nagaland Post", "Shillong Times", "The Sentinel", "Himachal Dastak", "Kashmir Times",
+    "Greater Kashmir", "Punjab Kesari", "Deshbandhu", "Andhra Bhoomi", "Vijay Karnataka",
+    "Dinakaran", "Mangaluru Today", "Navodaya Times", "Tamil Murasu", "Sakshi Post",
+    "Telangana Today", "Mumbai Mirror", "Calcutta Gazette", "Delhi Recorder", "Express India",
+    "Samyukta Karnataka", "Divya Marathi", "The Sunday Guardian", "Goa Times", "Odisha Bhaskar",
+    "Bangalore Mirror", "Chennai Chronicle", "Patna Herald", "Ranchi Express", "Lucknow Observer",
+    "Jammu Journal", "Punjab Tribune", "Bhopal Patrika", "Jaipur Times", "Pune Samachar",
+    "Indore Chronicle", "Surat Samvad", "Bihar Vani", "Chandigarh Live", "Nagpur News",
+    "Thiruvananthapuram Post", "Bhubaneswar Mirror", "Kolkata Gazette", "Delhi Standard", "Uttarakhand Reporter",
+    "Andaman Chronicle", "Lakshadweep Times", "Kochi Journal", "Madurai Express", "Manipur Gazette",
+    "Mizoram News", "Arunachal Observer", "Meghalaya Daily", "Tripura Chronicle", "Puducherry Express"
+]
