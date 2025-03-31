@@ -17,5 +17,5 @@ existing_titles = [
     "Indore Chronicle", "Surat Samvad", "Bihar Vani", "Chandigarh Live", "Nagpur News",
     "Thiruvananthapuram Post", "Bhubaneswar Mirror", "Kolkata Gazette", "Delhi Standard", "Uttarakhand Reporter",
     "Andaman Chronicle", "Lakshadweep Times", "Kochi Journal", "Madurai Express", "Manipur Gazette",
-    "Mizoram News", "Arunachal Observer", "Meghalaya Daily", "Tripura Chronicle", "Puducherry Express"
+    "Mizoram News", "Arunachal Observer", "Meghalaya Daily", "Tripura Chronicle", "Puducherry Express","mumbai here"
 ]

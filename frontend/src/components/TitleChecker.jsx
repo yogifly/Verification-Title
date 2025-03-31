@@ -1,55 +1,66 @@
-import { useState } from "react";
+// src/App.js
+
+import React, { useState } from "react";
 import axios from "axios";
 
 function App() {
   const [title, setTitle] = useState("");
   const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+
     try {
-      const response = await axios.post("/verify_title", { title });
+      const response = await axios.post("http://127.0.0.1:5000/verify_title", {
+        title,
+      });
       setResult(response.data);
     } catch (error) {
       console.error("Error verifying title:", error);
-      setResult({ error: "Failed to verify title" });
     }
-    setLoading(false);
   };
 
   return (
-    <div style={{ padding: "20px", textAlign: "center" }}>
-      <h2>Title Verification System</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Title Verification System</h1>
+
+      <form onSubmit={handleSubmit} className="mb-4">
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter a title"
-          style={{ padding: "10px", width: "300px" }}
+          placeholder="Enter Title"
+          className="border p-2 rounded w-full mb-2"
           required
         />
-        <button type="submit" style={{ marginLeft: "10px", padding: "10px" }}>
-          Verify
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Verify Title
         </button>
       </form>
 
-      {loading && <p>Verifying...</p>}
       {result && (
-        <div style={{ marginTop: "20px", padding: "10px", border: "1px solid black" }}>
-          <h3>Result:</h3>
-          {result.error ? (
-            <p style={{ color: "red" }}>{result.error}</p>
-          ) : (
+        <div className="mt-4 p-4 border rounded bg-gray-100">
+          <h2 className="text-xl font-semibold">Result:</h2>
+          <p>Status: {result.status}</p>
+          {result.status === "Rejected" && (
             <>
-              <p>Status: <strong>{result.status}</strong></p>
-              {result.reason && <p>Reason: {result.reason}</p>}
-              {result.similarity_score && <p>Similarity Score: {result.similarity_score}</p>}
-              <p>Verification Probability: {result.verification_probability}%</p>
+              <p>
+                <strong>Reason:</strong> {result.reason}
+              </p>
+              <p>
+                <strong>Matched Title:</strong> {result.similarity_score
+                  ? `${result.similarity_score} - ${result.reason}`
+                  : "N/A"}
+              </p>
             </>
           )}
+          <p>
+            <strong>Verification Probability:</strong>{" "}
+            {result.verification_probability}%
+          </p>
         </div>
       )}
     </div>

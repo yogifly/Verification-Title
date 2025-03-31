@@ -4,6 +4,8 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from rapidfuzz.distance import Levenshtein
 from metaphone import doublemetaphone
+import faiss
+import numpy as np
 import re
 
 # Import external lists
@@ -54,7 +56,24 @@ def contains_restricted_words(title):
     words = set(title.split())
     return bool(words & restricted_words)
 
-# Final Title Verification Check
+# ---------------------------
+# 🔥 FAISS Setup for Fast Search
+# ---------------------------
+
+# Create embeddings for existing titles
+title_embeddings = model.encode([preprocess_title(title) for title in existing_titles])
+title_embeddings = np.array(title_embeddings).astype('float32')
+
+# Define FAISS index
+dimension = title_embeddings.shape[1]  # 384 dimensions for SBERT
+index = faiss.IndexFlatL2(dimension)  # Using L2 distance for similarity
+index.add(title_embeddings)  # Add all embeddings to the FAISS index
+
+
+# ---------------------------
+# 🚀 Final Title Verification with FAISS
+# ---------------------------
+
 def verify_title(new_title):
     new_title = preprocess_title(new_title)
 
@@ -65,14 +84,22 @@ def verify_title(new_title):
     if has_forbidden_prefix_suffix(new_title):
         return {"status": "Rejected", "reason": "Contains forbidden prefix/suffix"}
 
-    # Compare with existing titles
+    # Create embedding for new title
+    new_embedding = model.encode([new_title]).astype('float32')
+
+    # Search using FAISS to get top 5 nearest neighbors
+    D, I = index.search(new_embedding, 5)  # D = distance, I = index of nearest neighbors
+
     max_similarity = 0.0
     matched_title = None
 
-    for existing_title in existing_titles:
-        existing_title = preprocess_title(existing_title)
+    for idx, dist in zip(I[0], D[0]):
+        if idx == -1:
+            continue
 
-        # Compute similarities
+        existing_title = preprocess_title(existing_titles[idx])
+
+        # Calculate other similarities
         cosine_sim = calculate_cosine_similarity(new_title, existing_title)
         jaccard_sim = calculate_jaccard_similarity(new_title, existing_title)
         levenshtein_sim = calculate_levenshtein_distance(new_title, existing_title)
@@ -89,15 +116,16 @@ def verify_title(new_title):
         final_similarity = (cosine_sim + jaccard_sim + levenshtein_sim) / 3
 
         if phonetic_match:
-            final_similarity += 0.1  # Slight boost if phonetic match is found
+            final_similarity += 0.1  # Boost for phonetic match
 
         if final_similarity > max_similarity:
             max_similarity = final_similarity
-            matched_title = existing_title
+            matched_title = existing_titles[idx]
 
-    verification_probability = round(100 - (max_similarity * 100), 2)
+    verification_probability = round(max_similarity * 100, 2)
 
-    if max_similarity >= 0.85:
+    # Reject if similarity >= 75%
+    if max_similarity >= 0.75:
         return {
             "status": "Rejected",
             "reason": f"Too similar to existing title '{matched_title}'",
@@ -109,6 +137,10 @@ def verify_title(new_title):
         "status": "Accepted",
         "verification_probability": verification_probability
     }
+
+# ---------------------------
+# 🌐 API Route for Title Verification
+# ---------------------------
 
 @app.route('/verify_title', methods=['POST'])
 def title_verification():
